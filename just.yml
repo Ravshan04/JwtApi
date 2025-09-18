@@ -1,0 +1,29 @@
+name: CI for Mini API
+
+on:
+  push:       # Kod push qilinganda
+    branches: [ "main" ]
+  pull_request:  # PR ochilganda
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Kodni yuklash
+        uses: actions/checkout@v3
+
+      - name: .NET SDK o‘rnatish
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Bog‘liqliklarni yuklash
+        run: dotnet restore ./api
+
+      - name: Build qilish
+        run: dotnet build ./api --no-restore --configuration Release
+
+      - name: Test qilish
+        run: dotnet test ./api --no-build --verbosity normal
